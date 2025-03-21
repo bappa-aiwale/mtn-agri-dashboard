@@ -70,7 +70,7 @@ export default function StateComparisons() {
                 <Link
                   key={state}
                   href={`/state-comparisons/${toSlug(state)}`}
-                  className="block bg-white shadow-md rounded-lg border-t-2 bg-green-50 border-t-mtn-green-800 hover:bg-green-200 transition duration-150"
+                  className="shadow-md rounded-lg border-t-2 bg-green-50 border-t-mtn-green-800 hover:bg-green-200 transition duration-150"
                 >
                   <div className="flex items-center justify-center h-20 p-2">
                     <span className="text-mtn-green-800 font-medium text-center">
