@@ -1,6 +1,6 @@
 function Objective() {
   return (
-    <div className="p-6 max-w-full bg-gray-50 overflow-y-auto">
+    <div className="p-6 max-w-full bg-gray-50 overflow-y-auto min-h-svh">
       <h1 className="text-4xl font-bold text-mtn-green-800 mb-6">Objective</h1>
 
       <div className="bg-white rounded-lg shadow-md p-6 mt-6 border-t-4 border-t-mtn-green-800">
