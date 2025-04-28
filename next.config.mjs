@@ -6,7 +6,7 @@ const nextConfig = {
       {
         source: "/",
         destination: "/objective",
-        permanent: true, // or false for temporary redirect
+        permanent: false, // or false for temporary redirect
       },
     ];
   },
