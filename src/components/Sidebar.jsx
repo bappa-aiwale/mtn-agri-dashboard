@@ -17,6 +17,7 @@ const Sidebar = () => {
     // { name: "State Level Crop Calendar", path: "/crop-calendar" },
     // { name: "State Comparisons", path: "/state-comparisons" },
     { name: "State Level Crop Calendar", path: "/state-comparisons" },
+    { name: "Crop Data", path: "/crop-data" },
     { name: "About MTN", path: "/about" },
   ];
 
