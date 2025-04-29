@@ -1,11 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import {
-  getAllCrops,
-  getSeasonsForCrop,
-  getStatesForCropAndSeason,
-  getCropInfo,
-} from "./actions";
 
 function CropDate() {
   // State for available options
@@ -21,11 +15,29 @@ function CropDate() {
   // State for the selected crop data
   const [cropData, setCropData] = useState(null);
 
+  // Loading states
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   // Fetch all crops on component mount
   useEffect(() => {
     async function fetchCrops() {
-      const cropsList = await getAllCrops();
-      setCrops(cropsList);
+      try {
+        setIsLoading(true);
+        const response = await fetch("/api/crop-data/crops");
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch crops");
+        }
+
+        const cropsList = await response.json();
+        setCrops(cropsList);
+      } catch (err) {
+        setError(`Error fetching crops: ${err.message}`);
+        console.error("Error fetching crops:", err);
+      } finally {
+        setIsLoading(false);
+      }
     }
     fetchCrops();
   }, []);
@@ -34,12 +46,28 @@ function CropDate() {
   useEffect(() => {
     async function fetchSeasons() {
       if (selectedCrop) {
-        const seasonsList = await getSeasonsForCrop(selectedCrop);
-        setSeasons(seasonsList);
-        // Reset season and state selections
-        setSelectedSeason("");
-        setSelectedState("");
-        setStates([]);
+        try {
+          setIsLoading(true);
+          const response = await fetch(
+            `/api/crop-data/seasons?crop=${encodeURIComponent(selectedCrop)}`,
+          );
+
+          if (!response.ok) {
+            throw new Error("Failed to fetch seasons");
+          }
+
+          const seasonsList = await response.json();
+          setSeasons(seasonsList);
+          // Reset season and state selections
+          setSelectedSeason("");
+          setSelectedState("");
+          setStates([]);
+        } catch (err) {
+          setError(`Error fetching seasons: ${err.message}`);
+          console.error("Error fetching seasons:", err);
+        } finally {
+          setIsLoading(false);
+        }
       }
     }
     fetchSeasons();
@@ -49,13 +77,26 @@ function CropDate() {
   useEffect(() => {
     async function fetchStates() {
       if (selectedCrop && selectedSeason) {
-        const statesList = await getStatesForCropAndSeason(
-          selectedCrop,
-          selectedSeason,
-        );
-        setStates(statesList);
-        // Reset state selection
-        setSelectedState("");
+        try {
+          setIsLoading(true);
+          const response = await fetch(
+            `/api/crop-data/states?crop=${encodeURIComponent(selectedCrop)}&season=${encodeURIComponent(selectedSeason)}`,
+          );
+
+          if (!response.ok) {
+            throw new Error("Failed to fetch states");
+          }
+
+          const statesList = await response.json();
+          setStates(statesList);
+          // Reset state selection
+          setSelectedState("");
+        } catch (err) {
+          setError(`Error fetching states: ${err.message}`);
+          console.error("Error fetching states:", err);
+        } finally {
+          setIsLoading(false);
+        }
       }
     }
     fetchStates();
@@ -65,12 +106,25 @@ function CropDate() {
   useEffect(() => {
     async function fetchCropData() {
       if (selectedCrop && selectedSeason && selectedState) {
-        const data = await getCropInfo(
-          selectedCrop,
-          selectedSeason,
-          selectedState,
-        );
-        setCropData(data);
+        try {
+          setIsLoading(true);
+          const response = await fetch(
+            `/api/crop-data/crop-info?crop=${encodeURIComponent(selectedCrop)}&season=${encodeURIComponent(selectedSeason)}&state=${encodeURIComponent(selectedState)}`,
+          );
+
+          if (!response.ok) {
+            throw new Error("Failed to fetch crop info");
+          }
+
+          const data = await response.json();
+          setCropData(data);
+        } catch (err) {
+          setError(`Error fetching crop info: ${err.message}`);
+          console.error("Error fetching crop info:", err);
+          setCropData(null);
+        } finally {
+          setIsLoading(false);
+        }
       }
     }
     fetchCropData();
@@ -82,6 +136,14 @@ function CropDate() {
         Crop Calendar Selector
       </h1>
 
+      {
+        //   error && (
+        //   <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        //     {error}
+        //   </div>
+        // )
+      }
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         {/* Crop Selector */}
         <div>
@@ -92,6 +154,7 @@ function CropDate() {
             value={selectedCrop}
             onChange={(e) => setSelectedCrop(e.target.value)}
             className="w-full p-2 border border-mtn-green-700 rounded-md shadow-sm text-mtn-green-800"
+            disabled={isLoading}
           >
             <option value="">-- Select Crop --</option>
             {crops.map((crop) => (
@@ -111,7 +174,7 @@ function CropDate() {
             value={selectedSeason}
             onChange={(e) => setSelectedSeason(e.target.value)}
             className="w-full p-2 border border-mtn-green-700 rounded-md shadow-sm text-mtn-green-800"
-            disabled={!selectedCrop}
+            disabled={!selectedCrop || isLoading}
           >
             <option value="">-- Select Season --</option>
             {seasons.map((season) => (
@@ -131,7 +194,7 @@ function CropDate() {
             value={selectedState}
             onChange={(e) => setSelectedState(e.target.value)}
             className="w-full p-2 border border-mtn-green-700 rounded-md shadow-sm text-mtn-green-800"
-            disabled={!selectedSeason}
+            disabled={!selectedSeason || isLoading}
           >
             <option value="">-- Select State --</option>
             {states.map((state) => (
@@ -142,6 +205,13 @@ function CropDate() {
           </select>
         </div>
       </div>
+
+      {/* Loading indicator */}
+      {isLoading && (
+        <div className="flex justify-center my-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-mtn-green-800"></div>
+        </div>
+      )}
 
       {/* Display selected data */}
       {cropData && (
