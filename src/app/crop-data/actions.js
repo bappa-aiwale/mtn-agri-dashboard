@@ -1,19 +1,17 @@
 // src/app/crop-data/actions.js
 "use server";
 
-import fs from "fs";
-import path from "path";
 import { parse } from "papaparse";
 
 // Helper function to read and parse the CSV file
 async function readCropData() {
-  const filePath = path.join(
-    process.cwd(),
-    "src",
-    "data",
-    "sovon_data_final.csv",
+  const response = await fetch(
+    new URL(
+      "/sovon_data_final.csv",
+      process.env.VERCEL_URL || "http://localhost:3000",
+    ),
   );
-  const fileContent = fs.readFileSync(filePath, "utf8");
+  const fileContent = await response.text();
 
   const { data } = parse(fileContent, {
     header: true,
@@ -61,9 +59,8 @@ export async function getStatesForCropAndSeason(crop, season) {
 // Get complete crop information for selected filters
 export async function getCropInfo(crop, season, state) {
   const data = await readCropData();
-  const filtered_data = data.find(
+  const filteredData = data.find(
     (row) => row.CROP === crop && row.SEASON === season && row.STATE === state,
   );
-  console.log(filtered_data);
-  return filtered_data;
+  return filteredData;
 }
