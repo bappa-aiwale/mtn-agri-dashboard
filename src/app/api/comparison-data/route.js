@@ -1,3 +1,4 @@
+// src/app/api/comparison-data/route.js
 import { NextResponse } from "next/server";
 import Papa from "papaparse";
 import fs from "fs/promises";
