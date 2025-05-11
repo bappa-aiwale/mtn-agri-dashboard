@@ -30,7 +30,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="min-h-screen w-72 bg-mtn-green-800 text-white">
+    <div className="min-h-screen w-1/5 bg-mtn-green-800 text-white">
       <div className="p-4 flex justify-center">
         <Link href="/">
           <div className="relative h-32 w-32">
