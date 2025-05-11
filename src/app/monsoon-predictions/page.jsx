@@ -9,9 +9,9 @@ import AccuracyTab from "@/components/monsoon-predictions/AccuracyTab";
 // Tab button component
 const TabButton = ({ label, isActive, onClick }) => (
   <button
-    className={`px-4 py-2 rounded-md border w-48 shadow-lg transition-colors ${
+    className={`px-4 py-2 rounded-md border w-1/3 shadow-lg transition-colors ${
       isActive
-        ? "bg-mtn-green-700 text-white font-medium"
+        ? "bg-mtn-green-800 text-white font-medium"
         : "hover:bg-green-100 text-mtn-green-900"
     }`}
     onClick={onClick}
@@ -45,14 +45,14 @@ export default function MonsoonPredictions() {
 
       <div className="flex min-h-screen">
         <div className="flex-1 bg-gray-50">
-          <div className="rounded-3xl border border-gray-200 bg-white m-6 overflow-hidden">
-            <div className="p-6">
-              <h1 className="text-4xl font-bold text-mtn-green-800 mb-6">
+          <div className="rounded-3xl border border-gray-200 bg-white m-4 overflow-hidden">
+            <div className="p-4">
+              <h1 className="text-4xl font-bold text-mtn-green-800 mb-4">
                 All India Monsoon Predictions
               </h1>
 
               {/* Tabs navigation */}
-              <div className="mt-6 flex space-x-6">
+              <div className="mt-4 flex space-x-6">
                 {tabs.map((tab) => (
                   <TabButton
                     key={tab.id}
