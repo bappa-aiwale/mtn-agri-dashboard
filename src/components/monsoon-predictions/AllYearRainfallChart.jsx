@@ -126,7 +126,7 @@ const AllYearRainfallChart = () => {
         <div className="text-center font-semibold text-mtn-green-800 mb-1 text-sm">
           Year {year}
         </div>
-        <div className="h-48">
+        <div className="h-60">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={data}
@@ -193,8 +193,8 @@ const AllYearRainfallChart = () => {
       </h2>
 
       {/* Add a key line explaining the Y-axis */}
-      <div className="text-center text-sm mb-2 text-gray-600">
-        Rainfall Index Value: Deviation from historical average (%)
+      <div className="text-center mb-2 text-gray-600">
+        Rainfall Index Value: Deviation from historical average
       </div>
 
       {/* First row: 5 columns for first 5 years */}

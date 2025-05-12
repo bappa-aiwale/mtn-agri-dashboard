@@ -45,9 +45,9 @@ export default function MonsoonPredictions() {
 
       <div className="flex min-h-screen">
         <div className="flex-1 bg-gray-50">
-          <div className="rounded-3xl border border-gray-200 bg-white m-4 overflow-hidden">
+          <div className="rounded-3xl border border-gray-200 bg-white m-4 p-1 overflow-hidden">
             <div className="p-4">
-              <h1 className="text-4xl font-bold text-mtn-green-800 mb-4">
+              <h1 className="text-4xl font-bold text-mtn-green-800 mb-8">
                 All India Monsoon Predictions
               </h1>
 
