@@ -77,10 +77,6 @@ const MonsoonRainfallChart = () => {
     return value >= 0 ? "rgba(99, 132, 255, 0.8)" : "rgba(255, 99, 132, 0.8)";
   };
 
-  // Create a grid layout with 5 years in first row, 5 in second row
-  const firstRowYears = years.slice(0, 5);
-  const secondRowYears = years.slice(5);
-
   // Create a custom tooltip
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
@@ -199,14 +195,7 @@ const MonsoonRainfallChart = () => {
       {/* First row: 5 columns for first 5 years */}
       <div className="mb-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-          {firstRowYears.map((year) => renderYearChart(year))}
-        </div>
-      </div>
-
-      {/* Second row: 5 columns for remaining years */}
-      <div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          {secondRowYears.map((year) => renderYearChart(year))}
+          {years.map((year) => renderYearChart(year))}
         </div>
       </div>
     </div>
