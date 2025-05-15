@@ -104,7 +104,7 @@ const Sidebar = ({ className }) => {
       <div
         className={classNames(
           "transition-all duration-300 ease-in-out bg-mtn-green-800 text-white fixed md:sticky z-10",
-          isMobile ? "w-64" : isCollapsed ? "w-20" : "w-64", // Always use full width on mobile
+          isMobile ? "w-64" : isCollapsed ? "w-20" : "w-1/6", // Always use full width on mobile
           isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
           "h-full min-h-svh",
           "top-0 left-0",
