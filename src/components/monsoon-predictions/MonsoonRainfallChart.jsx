@@ -123,7 +123,7 @@ const MonsoonRainfallChart = () => {
         <div className="text-center font-semibold text-mtn-green-800 mb-1 text-sm">
           Year {year}
         </div>
-        <div className="h-60">
+        <div className="h-52">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={data}
