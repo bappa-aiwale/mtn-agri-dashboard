@@ -42,7 +42,7 @@ export default function MonsoonPredictions() {
         />
       </Head>
       <div className="flex min-h-screen">
-        <div className="flex-1 bg-gray-50 p-8 pt-12 w-full">
+        <div className="flex-1 bg-gray-50 p-8 w-full">
           <div className="rounded-xl border border-gray-200 bg-white mx-0 sm:m-4 p-1 overflow-hidden">
             <div className="p-2 sm:p-4">
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-mtn-green-800 mb-4 sm:mb-8 text-center sm:text-left">
