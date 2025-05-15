@@ -131,7 +131,7 @@ function CropDate() {
   }, [selectedCrop, selectedSeason, selectedState]);
 
   return (
-    <div className="container mx-auto p-4 bg-gray-50 min-h-screen">
+    <div className="p-8 pt-12 w-full bg-gray-50 min-h-screen">
       <div className="min-h-[95vh] bg-white p-4 rounded-xl shadow-lg">
         <h1 className="text-4xl font-bold mb-8 text-mtn-green-800">
           Crop Calendar Selector
