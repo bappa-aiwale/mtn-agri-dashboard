@@ -1,10 +1,24 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Plotly from "plotly.js-dist-min";
 
 export default function ComparisonSankeyDiagram({ data }) {
   const sankeyContainerRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Function to check if the screen is mobile
+  const checkMobile = () => {
+    setIsMobile(window.innerWidth < 768);
+  };
+
+  useEffect(() => {
+    // Check initially and add resize listener
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     if (!data || !sankeyContainerRef.current) return;
@@ -109,31 +123,51 @@ export default function ComparisonSankeyDiagram({ data }) {
       }
     }
 
-    // Calculate positions for each column to ensure left-to-right flow
+    // Determine if we should use vertical layout for mobile
+    const orientation = isMobile ? "v" : "h";
+
+    // Calculate positions for each column based on orientation
     const xPositions = [];
-    for (let i = 0; i < columns.length; i++) {
-      const uniqueVals = [...new Set(data[columns[i]])];
-      for (let j = 0; j < uniqueVals.length; j++) {
-        xPositions.push(i / (columns.length - 1));
+    const yPositions = [];
+
+    if (orientation === "h") {
+      // Horizontal layout (desktop)
+      for (let i = 0; i < columns.length; i++) {
+        const uniqueVals = [...new Set(data[columns[i]])];
+        for (let j = 0; j < uniqueVals.length; j++) {
+          xPositions.push(i / (columns.length - 1));
+          yPositions.push(null); // Not used in horizontal layout
+        }
+      }
+    } else {
+      // Vertical layout (mobile)
+      for (let i = 0; i < columns.length; i++) {
+        const uniqueVals = [...new Set(data[columns[i]])];
+        for (let j = 0; j < uniqueVals.length; j++) {
+          yPositions.push(i / (columns.length - 1));
+          xPositions.push(null); // Not used in vertical layout
+        }
       }
     }
 
     // Create the Sankey diagram
     const sankeyData = {
       type: "sankey",
-      orientation: "h",
+      orientation: orientation,
       node: {
-        pad: 15,
-        thickness: 20,
+        pad: isMobile ? 10 : 15,
+        thickness: isMobile ? 15 : 20,
         line: {
           color: "white",
           width: 0.5,
         },
         label: labels,
         color: colors,
-        x: xPositions,
+        // Only use x/y position based on orientation
+        x: orientation === "h" ? xPositions : undefined,
+        y: orientation === "v" ? yPositions : undefined,
         font: {
-          size: 14,
+          size: isMobile ? 10 : 14,
           color: "#333",
         },
       },
@@ -147,20 +181,22 @@ export default function ComparisonSankeyDiagram({ data }) {
 
     const layout = {
       title: {
-        text: `Agricultural Flow: State → Season → Crop → District`,
+        text: isMobile
+          ? `Agricultural Flow`
+          : `Agricultural Flow: State → Season → Crop → District`,
         font: {
-          size: 22,
+          size: isMobile ? 16 : 22,
         },
       },
       font: {
-        size: 16,
+        size: isMobile ? 12 : 16,
       },
       autosize: true,
       margin: {
-        l: 50,
-        r: 50,
-        t: 50,
-        b: 50,
+        l: isMobile ? 30 : 50,
+        r: isMobile ? 30 : 50,
+        t: isMobile ? 30 : 50,
+        b: isMobile ? 30 : 50,
       },
       paper_bgcolor: "rgb(255, 255, 255)",
       plot_bgcolor: "rgb(255, 255, 255)",
@@ -177,13 +213,16 @@ export default function ComparisonSankeyDiagram({ data }) {
     return () => {
       Plotly.purge(container);
     };
-  }, [data]);
+  }, [data, isMobile]); // Added isMobile as a dependency
 
   if (!data) return null;
 
   return (
     <div className="bg-white border border-gray-100 rounded-md shadow-sm p-4">
-      <div ref={sankeyContainerRef} className="w-full h-[75vh]"></div>
+      <div
+        ref={sankeyContainerRef}
+        className={`w-full ${isMobile ? "h-[90vh]" : "h-[64vh]"}`}
+      ></div>
     </div>
   );
 }
