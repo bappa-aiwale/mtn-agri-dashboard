@@ -16,14 +16,10 @@ import {
   X,
 } from "lucide-react";
 
-// Simple utility function to join classnames
-const classNames = (...classes) => classes.filter(Boolean).join(" ");
-
 const Sidebar = ({ className }) => {
   const pathname = usePathname();
   const [hoveredItem, setHoveredItem] = useState(null);
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isOpen, setIsOpen] = useState(false); // Start closed on mobile
+  const [isOpen, setIsOpen] = useState(true); // Desktop: default open, Mobile: will be set based on screen size
   const [isMobile, setIsMobile] = useState(false);
 
   // Navigation items with icons
@@ -50,9 +46,9 @@ const Sidebar = ({ className }) => {
     return false;
   };
 
-  // Toggle sidebar collapse state (for desktop only)
-  const toggleCollapse = () => {
-    setIsCollapsed(!isCollapsed);
+  // Toggle sidebar open/close state
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
   };
 
   // Handle resize for responsive behavior
@@ -62,7 +58,7 @@ const Sidebar = ({ className }) => {
       setIsMobile(mobile);
 
       if (mobile) {
-        // Mobile: Just set closed by default, but don't collapse
+        // Mobile: closed by default
         setIsOpen(false);
       } else {
         // Desktop: open by default
@@ -81,9 +77,10 @@ const Sidebar = ({ className }) => {
     <>
       {/* Mobile toggle button - outside the sidebar */}
       <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="md:hidden fixed z-20 top-4 left-4 bg-transparent text-mtn-green-900 "
+        onClick={toggleSidebar}
+        className="md:hidden fixed z-20 top-4 left-4 bg-transparent text-mtn-green-900"
         aria-label="Toggle menu"
+        title={isOpen ? "Close" : "Menu"}
       >
         {isOpen ? (
           <X size={24} className="text-white fixed top-4 left-4" />
@@ -102,40 +99,29 @@ const Sidebar = ({ className }) => {
 
       {/* Sidebar */}
       <div
-        className={classNames(
-          "transition-all duration-300 ease-in-out bg-mtn-green-800 text-white fixed md:sticky z-10",
-          isMobile ? "w-64" : isCollapsed ? "w-20" : "w-1/6", // Always use full width on mobile
-          isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
-          "h-full min-h-svh",
-          "top-0 left-0",
-          className,
-        )}
+        className={`transition-all duration-300 ease-in-out bg-mtn-green-800 text-white fixed md:sticky z-10
+          ${isMobile ? "w-64" : isOpen ? "w-1/6" : "w-20"}
+          ${isMobile ? (isOpen ? "translate-x-0" : "-translate-x-full") : "translate-x-0"}
+          h-full min-h-svh top-0 left-0
+          ${className || ""}`}
       >
-        {/* Desktop collapse toggle button */}
+        {/* Desktop collapse/expand toggle button */}
         <button
-          onClick={toggleCollapse}
+          onClick={toggleSidebar}
           className="hidden md:flex absolute right-0 top-4 bg-transparent text-mtn-green-700 p-2 rounded-l-lg transform translate-x-full items-center justify-center"
-          title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          title={isOpen ? "Collapse sidebar" : "Expand sidebar"}
         >
-          {isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
+          {isOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
         </button>
 
         <div
-          className={classNames(
-            "flex justify-center transition-all duration-300",
-            isMobile ? "p-4" : isCollapsed ? "p-2" : "p-4", // Always use full padding on mobile
-          )}
+          className={`flex justify-center transition-all duration-300
+            ${isMobile ? "p-4" : isOpen ? "p-4" : "p-2"}`}
         >
           <Link href="/">
             <div
-              className={classNames(
-                "relative transition-all duration-300",
-                isMobile
-                  ? "h-16 w-16 sm:h-24 sm:w-24"
-                  : isCollapsed
-                    ? "h-14 w-14"
-                    : "sm:h-24 sm:w-24 h-16 w-16",
-              )}
+              className={`relative transition-all duration-300
+                ${isOpen ? "h-24 w-24 sm:h-32 sm:w-32" : "h-14 w-14"}`}
             >
               <Image
                 src={companyLogo}
@@ -170,15 +156,15 @@ const Sidebar = ({ className }) => {
 
                     <Link
                       href={item.path}
-                      className={classNames(
-                        "flex items-center py-4 pl-8",
-                        active
-                          ? "bg-mtn-green-900 rounded-r-sm"
-                          : isHovered
-                            ? "bg-mtn-green-700 rounded-r-sm"
-                            : "",
-                        "transition-all duration-200",
-                      )}
+                      className={`flex items-center py-4 pl-8
+                        ${
+                          active
+                            ? "bg-mtn-green-900 rounded-r-sm"
+                            : isHovered
+                              ? "bg-mtn-green-700 rounded-r-sm"
+                              : ""
+                        }
+                        transition-all duration-200`}
                       onClick={() => {
                         // Close sidebar on mobile after clicking a link
                         if (isMobile) {
@@ -187,8 +173,8 @@ const Sidebar = ({ className }) => {
                       }}
                     >
                       <Icon size={20} className="mr-3 flex-shrink-0" />
-                      {/* Always show text on mobile, otherwise follow desktop collapsed state */}
-                      {(isMobile || !isCollapsed) && <span>{item.name}</span>}
+                      {/* Always show text on mobile, otherwise only when open on desktop */}
+                      {(isMobile || isOpen) && <span>{item.name}</span>}
                     </Link>
                   </div>
                 </li>
