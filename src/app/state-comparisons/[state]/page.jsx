@@ -43,7 +43,7 @@ export default function StateComparisonPage() {
   }, [stateName]);
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className=" pt-12 p-8 flex min-h-screen bg-gray-50">
       <div className="flex-1">
         <div className="border-b border-gray-200 bg-white">
           <div className="px-4 py-4">
@@ -74,7 +74,7 @@ export default function StateComparisonPage() {
           </div>
         </div>
 
-        <div className="p-4">
+        <div className="pt-4">
           {loading ? (
             <div className="flex justify-center items-center h-64">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>

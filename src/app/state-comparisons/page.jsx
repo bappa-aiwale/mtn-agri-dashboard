@@ -34,7 +34,7 @@ export default function StateComparisons() {
   }, []);
 
   return (
-    <div className="p-6 max-w-full bg-gray-50 min-h-screen">
+    <div className="p-8 pt-12 max-w-full bg-gray-50 min-h-screen">
       <h1 className="text-4xl font-bold text-mtn-green-800 mb-6">
         State Comparisons
       </h1>
